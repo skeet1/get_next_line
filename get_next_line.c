@@ -6,7 +6,7 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 23:00:57 by mkarim            #+#    #+#             */
-/*   Updated: 2021/11/30 13:02:50 by mkarim           ###   ########.fr       */
+/*   Updated: 2021/11/30 19:33:05 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	ft_search(char *s, char c)
 	int		i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s[i])
 	{
 		if (s[i] == c)
@@ -30,20 +32,55 @@ char	*ft_get_line(char *s)
 {
 	int		i;
 	char	*line;
+	int		len;
 
 	i = 0;
-	while (s[i] && s[i] != '\n')
-		i++;
-	line = (char *)malloc((i + 1) * sizeof(char));
-	i = 0;
-	while (s[i] && s[i] != '\n')
+	len = 0;
+	if (!s)
+		return (NULL);
+	while (s[len] && s[len] != '\n')
+		len++;
+	if (s[len] == '\n')
+	{
+		len = len + 1;
+	}
+	line = (char *)malloc((len + 1) * sizeof(char));
+	if (!line)
+		return (NULL);
+	while (i < len)
 	{
 		line[i] = s[i];
 		i++;
 	}
-	line[i++] = '\n';
 	line[i] = '\0';
 	return (line);
+}
+char	*ft_read(char *str, int fd)
+{
+	char	*buf;
+	int		r;
+
+	r = 1;
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
+		return (NULL);
+	while (r != 0 && ft_search(str, '\n') == 0)
+	{
+		r = read(fd, buf, BUFFER_SIZE);
+		if (r == -1)
+		{
+			free(buf);
+			return (NULL);
+		}
+		buf[r] = '\0';
+		if (r == 0)
+		{
+			break ;
+		}
+		str = ft_strjoin(str, buf);
+	}
+	free(buf);
+	return (str);
 }
 
 char	*ft_save_rest(char *s)
@@ -58,6 +95,11 @@ char	*ft_save_rest(char *s)
 	start = 0;
 	while (s[i] && s[i] != '\n')
 		i++;
+	if (s[i] == '\0')
+	{
+		free(s);
+		return (NULL);
+	}
 	if (s[i] && s[i++] == '\n')
 	{
 		start = i;
@@ -72,49 +114,32 @@ char	*ft_save_rest(char *s)
 		i++;
 	}
 	save[i] = '\0';
-	//printf("save is : [%s]\n", save);
+	free(s);
 	return (save);
 }
 
 char	*get_next_line(int fd)
 {
-	int		r;
-	char	*line;
-	static	char	*s;
-	int		d;
+	static char	*line;
+	char	*res;
 
-	d = 0;
-	r = 1;
-	line = NULL;
-	if (BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
-	s = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	while (r >= 0 && ft_search(s, '\n') == 0)
-	{
-		r = read(fd, s, BUFFER_SIZE);
-		if (r == 0)
-			break;
-		if (r < 0)
-		{
-			free(s);
-			return (NULL);
-		}
-		line = ft_strjoin(line, s);
-	}
-	s = ft_save_rest(line);
-	line = ft_get_line(line);
-	free(s);
-	return (line);
+	line = ft_read(line, fd);
+	if (!line)
+		return (NULL);
+	res = ft_get_line(line);
+	line = ft_save_rest(line);
+	return (res);
 }
-/*
-int main()
+
+/*int main()
 {
 	int		fd;
 
 	fd = open("test", O_CREAT | O_RDWR);
-//	printf("%s\n", ft_save_rest("hello\nworld"));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
-//	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 }*/
