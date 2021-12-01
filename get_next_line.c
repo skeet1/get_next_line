@@ -6,7 +6,7 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 23:00:57 by mkarim            #+#    #+#             */
-/*   Updated: 2021/11/30 19:33:05 by mkarim           ###   ########.fr       */
+/*   Updated: 2021/12/01 17:20:11 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ char	*ft_get_line(char *s)
 	while (s[len] && s[len] != '\n')
 		len++;
 	if (s[len] == '\n')
-	{
-		len = len + 1;
-	}
+		len++;
 	line = (char *)malloc((len + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
@@ -55,6 +53,7 @@ char	*ft_get_line(char *s)
 	line[i] = '\0';
 	return (line);
 }
+
 char	*ft_read(char *str, int fd)
 {
 	char	*buf;
@@ -74,9 +73,7 @@ char	*ft_read(char *str, int fd)
 		}
 		buf[r] = '\0';
 		if (r == 0)
-		{
 			break ;
-		}
 		str = ft_strjoin(str, buf);
 	}
 	free(buf);
@@ -96,23 +93,23 @@ char	*ft_save_rest(char *s)
 	while (s[i] && s[i] != '\n')
 		i++;
 	if (s[i] == '\0')
-	{
 		free(s);
+	if (s[i] == '\0')
 		return (NULL);
-	}
+	start = i + 1;
 	if (s[i] && s[i++] == '\n')
-	{
-		start = i;
 		while (s[i++])
 			j++;
-	}
-	i = 0;
+	if (j == 0)
+		free(s);
+	if (j == 0)
+		return (NULL);
+	i = -1;
 	save = (char *)malloc((j + 1) * sizeof(char));
-	while (s[start + i])
-	{
+	if (!save)
+		return (NULL);
+	while (++i + start < ft_strlen(s))
 		save[i] = s[start + i];
-		i++;
-	}
 	save[i] = '\0';
 	free(s);
 	return (save);
@@ -121,7 +118,7 @@ char	*ft_save_rest(char *s)
 char	*get_next_line(int fd)
 {
 	static char	*line;
-	char	*res;
+	char		*res;
 
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
@@ -132,14 +129,18 @@ char	*get_next_line(int fd)
 	line = ft_save_rest(line);
 	return (res);
 }
-
-/*int main()
+/*
+int main()
 {
 	int		fd;
+	int		i;
 
+	i = 0;
 	fd = open("test", O_CREAT | O_RDWR);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-}*/
+	while (i < 10)
+	{
+		printf("%s", get_next_line(fd));
+		i++;
+	}
+}
+*/
