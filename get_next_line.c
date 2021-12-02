@@ -6,7 +6,7 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 23:00:57 by mkarim            #+#    #+#             */
-/*   Updated: 2021/12/02 12:04:19 by mkarim           ###   ########.fr       */
+/*   Updated: 2021/12/02 12:29:16 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,33 +54,37 @@ char	*ft_get_line(char *s)
 	return (line);
 }
 
-char	*ft_save_rest(char *s)
-{
+typedef struct variables {
 	int		i;
 	int		j;
 	int		start;
+}t_var;
+
+char	*ft_save_rest(char *s)
+{
+	t_var	v;
 	char	*save;
 
-	i = 0;
-	j = 0;
-	start = 0;
-	while (s[i] && s[i] != '\n')
-		i++;
-	if (s[i] == '\0' || s[i + 1] == '\0')
+	v.i = 0;
+	v.j = 0;
+	v.start = 0;
+	while (s[v.i] && s[v.i] != '\n')
+		(v.i)++;
+	if (s[v.i] == '\0' || s[v.i + 1] == '\0')
 		free(s);
-	if (s[i] == '\0' || s[i + 1] == '\0')
+	if (s[v.i] == '\0' || s[v.i + 1] == '\0')
 		return (NULL);
-	start = i + 1;
-	if (s[i] && s[i++] == '\n')
-		while (s[i++])
-			j++;
-	i = -1;
-	save = (char *)malloc((j + 1) * sizeof(char));
+	v.start = v.i + 1;
+	if (s[v.i] && s[(v.i)++] == '\n')
+		while (s[(v.i)++])
+			(v.j)++;
+	v.i = -1;
+	save = (char *)malloc((v.j + 1) * sizeof(char));
 	if (!save)
 		return (NULL);
-	while (++i + start < ft_strlen(s))
-		save[i] = s[start + i];
-	save[i] = '\0';
+	while (++(v.i) + v.start < ft_strlen(s))
+		save[v.i] = s[v.start + v.i];
+	save[v.i] = '\0';
 	free(s);
 	return (save);
 }
@@ -124,4 +128,18 @@ char	*get_next_line(int fd)
 	res = ft_get_line(line);
 	line = ft_save_rest(line);
 	return (res);
+}
+
+int main()
+{
+	int	fd;
+	int	i;
+
+	i = 0;
+	fd = open("test", O_CREAT | O_RDWR);
+	while (i < 10)
+	{
+		printf("%s", get_next_line(fd));
+		i++;
+	}
 }

@@ -6,11 +6,11 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 12:58:54 by mkarim            #+#    #+#             */
-/*   Updated: 2021/11/30 08:47:46 by mkarim           ###   ########.fr       */
+/*   Updated: 2021/12/02 12:23:42 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
 #include <fcntl.h>
