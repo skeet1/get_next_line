@@ -6,7 +6,7 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 23:00:57 by mkarim            #+#    #+#             */
-/*   Updated: 2021/12/01 17:20:11 by mkarim           ###   ########.fr       */
+/*   Updated: 2021/12/02 12:04:19 by mkarim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,37 @@ char	*ft_get_line(char *s)
 	return (line);
 }
 
+char	*ft_save_rest(char *s)
+{
+	int		i;
+	int		j;
+	int		start;
+	char	*save;
+
+	i = 0;
+	j = 0;
+	start = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (s[i] == '\0' || s[i + 1] == '\0')
+		free(s);
+	if (s[i] == '\0' || s[i + 1] == '\0')
+		return (NULL);
+	start = i + 1;
+	if (s[i] && s[i++] == '\n')
+		while (s[i++])
+			j++;
+	i = -1;
+	save = (char *)malloc((j + 1) * sizeof(char));
+	if (!save)
+		return (NULL);
+	while (++i + start < ft_strlen(s))
+		save[i] = s[start + i];
+	save[i] = '\0';
+	free(s);
+	return (save);
+}
+
 char	*ft_read(char *str, int fd)
 {
 	char	*buf;
@@ -80,41 +111,6 @@ char	*ft_read(char *str, int fd)
 	return (str);
 }
 
-char	*ft_save_rest(char *s)
-{
-	int		i;
-	int		j;
-	int		start;
-	char	*save;
-
-	i = 0;
-	j = 0;
-	start = 0;
-	while (s[i] && s[i] != '\n')
-		i++;
-	if (s[i] == '\0')
-		free(s);
-	if (s[i] == '\0')
-		return (NULL);
-	start = i + 1;
-	if (s[i] && s[i++] == '\n')
-		while (s[i++])
-			j++;
-	if (j == 0)
-		free(s);
-	if (j == 0)
-		return (NULL);
-	i = -1;
-	save = (char *)malloc((j + 1) * sizeof(char));
-	if (!save)
-		return (NULL);
-	while (++i + start < ft_strlen(s))
-		save[i] = s[start + i];
-	save[i] = '\0';
-	free(s);
-	return (save);
-}
-
 char	*get_next_line(int fd)
 {
 	static char	*line;
@@ -129,18 +125,3 @@ char	*get_next_line(int fd)
 	line = ft_save_rest(line);
 	return (res);
 }
-/*
-int main()
-{
-	int		fd;
-	int		i;
-
-	i = 0;
-	fd = open("test", O_CREAT | O_RDWR);
-	while (i < 10)
-	{
-		printf("%s", get_next_line(fd));
-		i++;
-	}
-}
-*/
