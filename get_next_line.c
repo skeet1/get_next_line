@@ -6,7 +6,7 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 23:00:57 by mkarim            #+#    #+#             */
-/*   Updated: 2021/12/02 12:29:16 by mkarim           ###   ########.fr       */
+/*   Updated: 2021/12/04 11:51:49 by karim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,10 @@ char	*ft_save_rest(char *s)
 	while (s[v.i] && s[v.i] != '\n')
 		(v.i)++;
 	if (s[v.i] == '\0' || s[v.i + 1] == '\0')
+	{
 		free(s);
-	if (s[v.i] == '\0' || s[v.i + 1] == '\0')
 		return (NULL);
+	}
 	v.start = v.i + 1;
 	if (s[v.i] && s[(v.i)++] == '\n')
 		while (s[(v.i)++])
@@ -120,7 +121,7 @@ char	*get_next_line(int fd)
 	static char	*line;
 	char		*res;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = ft_read(line, fd);
 	if (!line)
