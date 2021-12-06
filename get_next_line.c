@@ -6,7 +6,7 @@
 /*   By: mkarim <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 23:00:57 by mkarim            #+#    #+#             */
-/*   Updated: 2021/12/04 11:51:49 by karim            ###   ########.fr       */
+/*   Updated: 2021/12/06 15:29:35 by karim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,38 +54,28 @@ char	*ft_get_line(char *s)
 	return (line);
 }
 
-typedef struct variables {
-	int		i;
-	int		j;
-	int		start;
-}t_var;
-
 char	*ft_save_rest(char *s)
 {
-	t_var	v;
+	int		i;
+	int		j;
 	char	*save;
 
-	v.i = 0;
-	v.j = 0;
-	v.start = 0;
-	while (s[v.i] && s[v.i] != '\n')
-		(v.i)++;
-	if (s[v.i] == '\0' || s[v.i + 1] == '\0')
+	i = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (!s[i])
 	{
 		free(s);
 		return (NULL);
 	}
-	v.start = v.i + 1;
-	if (s[v.i] && s[(v.i)++] == '\n')
-		while (s[(v.i)++])
-			(v.j)++;
-	v.i = -1;
-	save = (char *)malloc((v.j + 1) * sizeof(char));
+	save = (char *)malloc(sizeof(char) * (ft_strlen(s) - i + 1));
 	if (!save)
 		return (NULL);
-	while (++(v.i) + v.start < ft_strlen(s))
-		save[v.i] = s[v.start + v.i];
-	save[v.i] = '\0';
+	i++;
+	j = 0;
+	while (s[i])
+		save[j++] = s[i++];
+	save[j] = '\0';
 	free(s);
 	return (save);
 }
@@ -130,7 +120,7 @@ char	*get_next_line(int fd)
 	line = ft_save_rest(line);
 	return (res);
 }
-
+/*
 int main()
 {
 	int	fd;
@@ -144,3 +134,4 @@ int main()
 		i++;
 	}
 }
+*/
